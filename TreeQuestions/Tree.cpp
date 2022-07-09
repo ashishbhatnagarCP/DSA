@@ -72,7 +72,7 @@ void inOrder(Node* root){
         inOrder(root->right);
 
 }
-
+//this method gives number of nodes. Hence we need to decrease the answer by 1.Since height gets calculated by edges.
 int height(Node* root){
         if(root==NULL)
                 return 0;
@@ -95,6 +95,38 @@ int getDiameter(Node* root){
                 return 0;
         return diameter(root)-1;
 }
+
+//similar to diameter, but this is not optimized as the TC is O(n^2)
+bool isBalanced(Node* root){
+        if(root==NULL)
+                return true; // if no nodes,means tree is balanced. the true here will be used as 1
+
+        bool option1=isBalanced(root->left);
+        bool option2=isBalanced(root->right);
+        bool option3=abs(height(root->left)-height(root->right))<=1;//this is main check. but since we are recalculating height it is not efficient.
+
+        return (option1 && option2 && option3);
+}
+
+pair<int,bool> isBalancedOptimizedRec(Node* root){
+        if(root==NULL)
+                return make_pair(0,true);
+
+        pair<int,bool> left=isBalancedOptimizedRec(root->left);
+        pair<int,bool> right=isBalancedOptimizedRec(root->right);
+
+        if(left.second && right.second && abs(left.first-right.first)<=1)
+                return make_pair(max(left.first,right.first)+1,true);
+        else
+                return make_pair(max(left.first,right.first)+1,false);
+}
+
+
+bool isBalancedOptimized(Node* root){
+        pair<int,bool> ans= isBalancedOptimizedRec(root);
+        return ans.second;
+}
+
 
 void lvlOrder(Node* root){
         if(root==NULL)
@@ -125,6 +157,27 @@ void lvlOrder(Node* root){
 
 }
 
+bool isSymmetric(Node* a,Node* b){
+        //checks
+        if(a==NULL && b==NULL)
+                return true;
+        else if(a!=NULL && b==NULL)
+                return false;
+        else if(a==NULL && b!=NULL)
+                return false;
+        else if(a->data!=b->data)
+                return false;
+
+        // below will only be called if left->data==right->data
+        return isSymmetric(a->left,b->right) && isSymmetric(a->right,b->left);
+
+}
+
+bool isSymmetric(Node* node){
+        if(node==NULL)
+                return true;
+        return isSymmetric(node->left,node->right);
+}
 
 int main(){
         //create tree
