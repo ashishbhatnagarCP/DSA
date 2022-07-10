@@ -179,6 +179,43 @@ bool isSymmetric(Node* node){
         return isSymmetric(node->left,node->right);
 }
 
+bool hasPathSum(Node* root,int sum){
+        if(root==NULL)
+                return false;
+
+        if(root->data==sum && root->left==NULL && root->right==NULL)
+                return true;
+
+        bool left=hasPathSum(root->left,sum-root->data);
+        bool right=hasPathSum(root->right,sum-root->data);
+
+        return left || right;
+
+}
+
+Node* lowestCommonAncestor(Node* root,Node* p, Node* q){
+
+        if(root==NULL)
+                return NULL;
+
+        if(root==p || root==q)
+                return root;
+
+        else{
+                Node* left=lowestCommonAncestor(root->left,p,q);
+                Node* right=lowestCommonAncestor(root->right,p,q);
+
+                if(left !=NULL && right!=NULL)
+                        return root;
+                else if(left==NULL)
+                        return right;
+                else
+                        return left;
+        }
+
+}
+
+
 int main(){
         //create tree
         Node* root = NULL;
