@@ -1,198 +1,241 @@
-#include<iostream>
-#include<queue>
+#include <bits/stdc++.h>
 using namespace std;
 
-class Node {
+class Node
+{
 
-    public:
-        int data;
-        Node* left;
-        Node* right;
+public:
+    int data;
+    Node *left;
+    Node *right;
 
-        Node(int d) {
-            this->data = d;
-            left = NULL;
-            right = NULL;
-        }
+    Node(int d)
+    {
+        this->data = d;
+        left = NULL;
+        right = NULL;
+    }
 };
 
-Node* buildBST(Node* root, int data) {
-    if( root == NULL) {
-        Node* temp = new Node(data);
+Node *buildBST(Node *root, int data)
+{
+    if (root == NULL)
+    {
+        Node *temp = new Node(data);
         return temp;
     }
 
-    if(data > root->data) {
-        root -> right = buildBST(root->right, data);
+    if (data > root->data)
+    {
+        root->right = buildBST(root->right, data);
     }
-    else {
+    else
+    {
         root->left = buildBST(root->left, data);
     }
     return root;
 }
 
-void createBST(Node* &root) {
+void createBST(Node *&root)
+{
 
     cout << "Enter the value for Root Node" << endl;
     int data;
     cin >> data;
 
-    while(data != -1) {
+    while (data != -1)
+    {
         root = buildBST(root, data);
         cout << "Enter the data for node " << endl;
         cin >> data;
     }
-
 }
 
-void preOrder(Node* root) {
-    //base case
-    if(root == NULL)
+void preOrder(Node *root)
+{
+    // base case
+    if (root == NULL)
         return;
 
-    //N
+    // N
     cout << root->data << " ";
-    //L
+    // L
     preOrder(root->left);
-    //R
+    // R
     preOrder(root->right);
 }
 
-void inOrder(Node* root) {
-    //LNR
-    //base case
-    if(root == NULL)
+void inOrder(Node *root)
+{
+    // LNR
+    // base case
+    if (root == NULL)
         return;
 
-    //L
+    // L
     inOrder(root->left);
-    //N
+    // N
     cout << root->data << " ";
-    //R
+    // R
     inOrder(root->right);
 }
 
-void postOrder(Node* root) {
-    //LNR
-    //base case
-    if(root == NULL)
+void postOrder(Node *root)
+{
+    // LNR
+    // base case
+    if (root == NULL)
         return;
 
-    //L
+    // L
     postOrder(root->left);
-    //R
+    // R
     postOrder(root->right);
-    //N
+    // N
     cout << root->data << " ";
-
 }
 
-void lvlOrderTraversal(Node* root) {
+void lvlOrderTraversal(Node *root)
+{
 
-    queue<Node*> q;
+    queue<Node *> q;
     q.push(root);
-    //change no. 1
+    // change no. 1
     q.push(NULL);
 
-    while(!q.empty()) {
-        //tu nikal
-        Node* front = q.front();
+    while (!q.empty())
+    {
+        // tu nikal
+        Node *front = q.front();
         q.pop();
-        if(front == NULL) {
+        if (front == NULL)
+        {
             cout << endl;
-            //catch here
-            if(!q.empty())//still elements are present
+            // catch here
+            if (!q.empty()) // still elements are present
                 q.push(NULL);
         }
-        else{
+        else
+        {
             cout << front->data << " ";
 
-            //bache chor jaio
-            if(front->left != NULL)
+            // bache chor jaio
+            if (front->left != NULL)
                 q.push(front->left);
-            if(front->right != NULL)
+            if (front->right != NULL)
                 q.push(front->right);
         }
     }
 }
 
-bool search(Node* root, int target) {
+bool search(Node *root, int target)
+{
 
-    if(root == NULL)
+    if (root == NULL)
         return false;
 
-    if(root -> data == target)
+    if (root->data == target)
         return true;
 
-    if(target < root->data) {
+    if (target < root->data)
+    {
         bool leftAns = search(root->left, target);
-        if(leftAns == true)
+        if (leftAns == true)
             return true;
     }
-    else{
+    else
+    {
         bool rightAns = search(root->right, target);
-        if(rightAns == true)
+        if (rightAns == true)
             return true;
     }
     return false;
 }
 
-Node* maxVal(Node* root) {
-    Node* temp = root;
-    while(temp ->right != NULL) {
-        temp = temp -> right;
+Node *maxVal(Node *root)
+{
+    Node *temp = root;
+    while (temp->right != NULL)
+    {
+        temp = temp->right;
     }
     return temp;
 }
 
-Node* deleteNode(Node* root, int target) {
-    if(root == NULL)
+Node *deleteNode(Node *root, int target)
+{
+    if (root == NULL)
         return NULL;
 
-    if( root -> data == target) {
-        //0 child
-        if( root->left == NULL && root->right == NULL) {
+    if (root->data == target)
+    {
+        // 0 child
+        if (root->left == NULL && root->right == NULL)
+        {
             delete root;
             return NULL;
         }
 
-        //1 child
-        if(root->left != NULL && root->right == NULL) {
-            Node* temp = root->left;
+        // 1 child
+        if (root->left != NULL && root->right == NULL)
+        {
+            Node *temp = root->left;
             delete root;
             return temp;
         }
 
-        if(root->left == NULL && root->right != NULL) {
-            Node* temp = root->right;
+        if (root->left == NULL && root->right != NULL)
+        {
+            Node *temp = root->right;
             delete root;
             return temp;
         }
 
-        //2 child
-        if( root->left != NULL && root->right != NULL) {
-            //get Inorder pred
-            int pred = maxVal(root->left) -> data;
-            //copy
+        // 2 child
+        if (root->left != NULL && root->right != NULL)
+        {
+            // get Inorder pred
+            int pred = maxVal(root->left)->data;
+            // copy
             root->data = pred;
-            //solve bachi hui   problem
+            // solve bachi hui   problem
             root->left = deleteNode(root->left, pred);
             return root;
         }
-
     }
-    else if(target > root->data) {
+    else if (target > root->data)
+    {
         root->right = deleteNode(root->right, target);
     }
-    else{
+    else
+    {
         root->left = deleteNode(root->left, target);
     }
     return root;
 }
 
+bool isBST(Node *root, int min, int max)
+{
+    if (root == NULL)
+        return true;
+    if (min < root->data && max > root->data)
+    {
+        bool left = isBST(root->left, min, root->data);
+        bool right = isBST(root->right, root->data, max);
+        return left && right;
+    }
+    return false;
+}
 
-int main() {
-    Node* root = NULL;
+bool isBST(Node *root)
+{
+    // Your code here
+    return isBST(root, INT_MIN, INT_MAX);
+}
+
+int main()
+{
+    Node *root = NULL;
     createBST(root);
 
     // lvlOrderTraversal(root);
@@ -220,7 +263,6 @@ int main() {
     cout << "Printing the tree again " << endl;
     lvlOrderTraversal(root);
     cout << endl;
-
 
     return 0;
 }
